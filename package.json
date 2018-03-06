@@ -10,14 +10,15 @@
   "author": "haf_decent",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.6.0",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "fs": "0.0.1-security",
-    "mongodb": "^2.2.33",
+    "mongodb": "^2.2.35",
     "rpio": "^0.9.20"
   },
   "devDependencies": {
     "ejs": "^2.5.7",
-    "nodemon": "^1.12.1"
+    "nodemon": "^1.17.1"
   }
 }

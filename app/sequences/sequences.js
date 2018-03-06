@@ -32,6 +32,13 @@ module.exports = {
         list.bots.valve_1.state = "1";
         rpio.mode(list.bots.valve_2.pin, rpio.OUTPUT);
         list.bots.valve_2.state = "1";
+        
+        rpio.mode(list.bots.valve_3.pin, rpio.OUTPUT);
+        rpio.mode(list.bots.valve_4.pin, rpio.OUTPUT);
+        delay(2000);
+        rpio.mode(list.bots.valve_3.pin, rpio.INPUT);
+        rpio.mode(list.bots.valve_4.pin, rpio.INPUT);
+        
         writeOut(list);
         return list;
     },

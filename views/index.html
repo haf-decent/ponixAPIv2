@@ -269,6 +269,35 @@
                     assign();
                 }
                 req.send();
+                sensorReq();
+                setInterval(sensorReq, 5000);
+            }
+            
+            function sensorReq() {
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "http://192.168.0.18:81/sensor/humiTemp?ht1");
+                xhr.onload = function(res, err) {
+                    var ht = err ? {t: "--", h: "--"} : JSON.parse(res.target.response).data;
+                    document.getElementById("temp").innerHTML = ht.t.toFixed(1) + "F";
+                    document.getElementById("hum").innerHTML = ht.h.toFixed(1) + "%";
+                }
+                xhr.send();
+                
+                var xhr1 = new XMLHttpRequest();
+                xhr1.open("GET", "http://192.168.0.18:81/sensor/waterTemp");
+                xhr1.onload = function(res, err) {
+                    var wt = err ? "--" : (JSON.parse(res.target.response).data * 2/3 + 40).toFixed(1);
+                    document.getElementById("wTemp").innerHTML = wt + "F";
+                }
+                xhr1.send();
+                
+                var xhr2 = new XMLHttpRequest();
+                xhr2.open("GET", "http://192.168.0.18:81/sensor/waterLevel?mixLevel");
+                xhr2.onload = function(res, err) {
+                    var lev = err ? "--" : JSON.parse(res.target.response).data.toFixed(1);
+                    document.getElementById("wLevel").innerHTML = lev + "in";
+                }
+                xhr2.send();
             }
             
             function assign() {
@@ -290,7 +319,7 @@
                 for (var sensor in sensors) {
                     var p = document.createElement("P");
                     p.id = sensor;
-                    p.innerHTML = sensors[sensor].value;
+                    p.innerHTML = "--";
                     var name = document.createElement("DIV");
                     name.innerHTML = "<h3>" + sensor + "</h3>";
                     name.appendChild(p);

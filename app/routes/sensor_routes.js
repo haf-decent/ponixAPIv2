@@ -5,6 +5,7 @@ module.exports = function(app, db) {
     
     app.get('/sensors/:sensor', (req, res) => {
         const sensor = req.params.sensor;
-        const target = {'sensor': sensor};
+        if (!sensors[sensor]) return res.status(404).send("Invalid sensor: " + sensor);
+        res.status(200).send(sensors[sensor].value);
     });
 }

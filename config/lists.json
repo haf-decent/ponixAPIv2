@@ -94,8 +94,8 @@
         "pH": {
             "value": 6.5
         },
-        "EC": {
-            "value": 400
+        "wLevel": {
+            "value": 10
         }
     },
     "sequences": {
