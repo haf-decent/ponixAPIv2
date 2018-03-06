@@ -35,7 +35,7 @@ module.exports = function(app, db) {
             return console.log('Invalid bot: ' + bot);
         }
         list.bots[bot]["state"] = s;
-        rpio.mode(list.bots[bot]["pin"], s ? rpio.OUTPUT: rpio.INPUT);
+        rpio.mode(list.bots[bot]["pin"], (s == "1") ? rpio.OUTPUT: rpio.INPUT);
         fs.writeFile(__dirname + '/../../config/lists.json', JSON.stringify(list, null, 4), function(err) {
             if (err) console.log(err);
         });
