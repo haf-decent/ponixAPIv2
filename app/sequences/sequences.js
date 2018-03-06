@@ -1,6 +1,7 @@
 var rpio = require('rpio');
 var list = require('../../config/lists.json');
 var fs = require('fs');
+var sleep = require('co-sleep');
 
 function writeOut(obj) {
     var path = __dirname + '/../../config/lists.json';
@@ -35,7 +36,7 @@ module.exports = {
         
         rpio.mode(list.bots.valve_3.pin, rpio.OUTPUT);
         rpio.mode(list.bots.valve_4.pin, rpio.OUTPUT);
-        delay(2000);
+        sleep(2000);
         rpio.mode(list.bots.valve_3.pin, rpio.INPUT);
         rpio.mode(list.bots.valve_4.pin, rpio.INPUT);
         
