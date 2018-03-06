@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="ponix_georgia" content="how's it growing?">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Ponix OS 2.0</title>
+        <style>
+            
+            body {
+                font-family: 'Montserrat',serif;
+                font-size: 12px;
+                color: rgba(0,0,0,0.65);
+                margin: 0px;
+                font-weight: 300;
+            }
+
+            html {
+                margin: 0;
+                padding: 0;
+                background-color: white;
+                box-sizing: border-box;
+            }
+
+            #container {
+                width: 1024px;
+                height: 600px;
+                background-color: white;
+	            margin: auto;
+                overflow: hidden;
+                position: absolute;
+            }
+
+            #control-card {
+                margin: 30px;
+                background-color: white;
+                box-shadow: 0px 10px 30px rgba(0,0,0,0.2);
+                padding: 30px;
+                height: 480px;
+                width: 904px;
+            }
+
+            #left-side-card {
+                height: 480px;
+                width: 372px;
+                display: inline-block;
+            }
+
+            #right-side-card {
+                height: 480px;
+                width: 372px;
+                display: inline-block;
+            }
+            
+            #tableDiv {
+                width: 150px;
+                height: 480px;
+                display: inline-block;
+                //margin: auto;
+            }
+            
+            div table {
+                //width: 100%;
+                margin-top: 25px;
+            }
+            
+            .pin {
+                border: 1px solid rgba(0,0,0,0.7);
+                text-align: center;
+                width: 300px;
+            }
+            
+            .device-card {
+                width: 372px;
+                height: 240px;
+                position: absolute;
+                //border: 1px solid rgba(0,0,0,0.2);
+            }
+            
+            .device-card h1 {
+                margin-top: 20px;
+            }
+            
+            .device-card div {
+                display: inline-block;
+                margin-left: 20px;
+                vertical-align: middle;
+                margin-bottom: 10px; 
+            }
+            
+            #right-down-card {
+                top: 300px;
+                margin-left: 20px;
+            }
+            
+            #left-up-card {
+                height: 480px !important;
+                margin-left: 20px;
+            }
+            
+            #right-up-card {
+                margin-left: 20px;
+            }
+            
+            /* The switch - the box around the slider */
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 60px;
+                height: 34px;
+            }
+
+            /* Hide default HTML checkbox */
+            .switch input {display:none;}
+
+            /* The slider */
+            .slider {
+              position: absolute;
+              cursor: pointer;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background-color: #ccc;
+              -webkit-transition: .4s;
+              transition: .4s;
+            }
+
+            .slider:before {
+              position: absolute;
+              content: "";
+              height: 26px;
+              width: 26px;
+              left: 4px;
+              bottom: 4px;
+              background-color: white;
+              -webkit-transition: .4s;
+              transition: .4s;
+            }
+
+            input:checked + .slider {
+              background-color: #99ca49;
+            }
+
+            input:focus + .slider {
+              box-shadow: 0 0 1px #99ca49;
+            }
+
+            input:checked + .slider:before {
+              -webkit-transform: translateX(26px);
+              -ms-transform: translateX(26px);
+              transform: translateX(26px);
+            }
+
+            /* Rounded sliders */
+            .slider.round {
+              border-radius: 34px;
+            }
+
+            .slider.round:before {
+              border-radius: 50%;
+            }
+            
+            button {
+                margin: 3px 100px 15px 20px;
+                width: 140px;
+                height: 30px;
+                background-color: #99ca49;
+                color: white;
+                font-family: "Montserrat";
+                font-size: 14pt;
+                font-weight: 300;
+                text-transform: uppercase;
+                cursor: pointer;
+            }
+            
+            button:active {
+                transform: translateY(4px);
+            }
+            
+            button:focus {
+                outline: none;
+            }
+            
+            h1 {
+                margin-left: 20px;
+                color: #99ca49;
+                text-transform: uppercase;
+            }
+            
+            h3 {
+                color: rgba(0,0,0,0.4);
+                display: inline-block;
+                width: 80px;
+                padding: none;
+                margin: 0px 0px 0px 0px !important;
+                vertical-align: top;
+                font-weight: 600;
+            }
+            
+            p {
+                display: inline-block;
+                font-size: 24pt;
+                font-weight: 200;
+                line-height: 20px;
+                margin: 0px !important;
+                width: 140px;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="container">
+            <div id="control-card">
+                <div id="tableDiv">
+                    <table>
+                    </table>
+                </div>
+                <div id="left-side-card">
+                    <div class="device-card" id="left-up-card">
+                        <h1>D e v i c e s</h1>
+                        <table></table>
+                    </div>
+                </div>
+                <div id="right-side-card">
+                    <div class="device-card" id="right-up-card">
+                        <h1>S e n s o r s</h1>
+                    </div>
+                    <div class="device-card" id="right-down-card">
+                        <h1>S e q u e n c e s</h1>
+                    </div>
+                </div>
+            </div>
+            <label class="switch">what
+              <input type="checkbox">
+              <span class="slider round"></span>
+            </label>
+        </div>
+        <script>
+            
+            var bots,
+                sensors,
+                seqClick = false;
+            
+            var seqs = {
+                drain: "drain",
+                dose: "dose",
+                shutdown: "shutdown"
+            }
+            
+            var table = document.getElementsByTagName("TABLE")[0],
+                uri = document.URL.split("views/")[0];
+            
+            window.onload = function() {
+                for (var i = 0; i < 20; i++) {
+                    var ch = document.createElement("TR");
+                    ch.innerHTML = "<td></td>";
+                    ch.innerHTML += "<td class='pin'>" + (2*i+1) + "</td><td class='pin'>" + (2*i+2) + "</td>";
+                    ch.innerHTML += "<td></td>";
+                    table.appendChild(ch);
+                }
+                var req = new XMLHttpRequest();
+                req.open("POST", uri + "sequences/initialize");
+                req.onloadend = function(res) {
+                    res = JSON.parse(res.target.response);
+                    bots = res.bots;
+                    sensors = res.sensors;
+                    assign();
+                }
+                req.send();
+            }
+            
+            function assign() {
+                for (var bot in bots) {
+                    var target = [];
+                    target[0] = Math.ceil(bots[bot]["pin"]/2) - 1;
+                    target[1] = (bots[bot]["pin"] % 2) ? 0: 3;
+                    table.children[target[0]].children[target[1]].innerHTML = bot;
+                    var butt = document.createElement("LABEL");
+                    butt.className = "switch";
+                    butt.innerHTML = "<input type='checkbox'><span class='slider round' onclick='toggle(this.parentElement.children[0])'></span>";
+                    var name = document.createElement("DIV");
+                    name.id = bot;
+                    name.innerHTML = "<h3>" + bot + "</h3>";
+                    name.appendChild(butt);
+                    document.getElementById("left-up-card").appendChild(name);
+                    if (bots[bot].state == 1) butt.children[1].click();
+                }
+                for (var sensor in sensors) {
+                    var p = document.createElement("P");
+                    p.id = sensor;
+                    p.innerHTML = sensors[sensor].value;
+                    var name = document.createElement("DIV");
+                    name.innerHTML = "<h3>" + sensor + "</h3>";
+                    name.appendChild(p);
+                    document.getElementById("right-up-card").appendChild(name);
+                }
+                for (var seq in seqs) {
+                    var butt = document.createElement("BUTTON");
+                    butt.innerHTML = seq;
+                    butt.onclick = function() {
+                        var req = new XMLHttpRequest();
+                        req.open("POST", uri + "sequences/" + this.innerHTML);
+                        req.onloadend = function(res) {
+                            bots = JSON.parse(res.target.response).bots;
+                            seqClick = true;
+                            for (var bot in bots) {
+                                var label = document.getElementById(bot).children[1];
+                                var curr = label.children[0].checked;
+                                var actual = (bots[bot].state == "1") ? true: false;
+                                if (curr !== actual) label.children[1].click();
+                            }
+                            seqClick = false;
+                        }
+                        req.send();
+                    };
+                    document.getElementById("right-down-card").appendChild(butt);
+                }
+            }
+            
+            function toggle(input, seq) {
+                if (seqClick) return;
+                var state = (input.checked) ? 0: 1;
+                var req = new XMLHttpRequest();
+                req.open("PUT", uri + "bots/" + input.parentElement.parentElement.children[0].innerHTML + "/" + state);
+                req.onloadend = function(res) {
+                    console.log(res.target.response);
+                }
+                req.send();
+            }
+
+        </script>
+    </body>
+</html>
