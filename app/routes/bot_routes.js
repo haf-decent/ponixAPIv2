@@ -75,7 +75,19 @@ module.exports = function(app, db) {
             var bot = req.params.bot;
             if (!list.bots[bot]) return res.status(404).send({error: 'Invalid bot designation: ' + bot});
             //delete bot from database
-            return res.status(200).send({data: 'Success - ' + bot + ' removed'});
+            delete list.bots[bot];
+            if (db) db.collection('bots').deleteOne({bot: bot}, (err, result) => {
+                if (err) return res.status(503).send({error: 'Database error: ' + err + '\nPlease retry your request'});
+                return res.status(200).send({data: 'Success - ' + bot + ' removed'});
+            });
+            else {
+                writeOut(list);
+                return res.status(200).send({
+                    warning: 'Database not connected',
+                    data: 'Success - ' + bot + ' removed'
+                });
+            }
+            writeOut(list);
         }
         else return res.status(500).send({error: 'An unknown error occurred'});
     });
