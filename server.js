@@ -39,4 +39,5 @@ MongoClient.connect(db.url, (err, database) => {
 // - 401: Authentication is required, try harder next time
 // - 403: Authentication is impossible, you will never get this
 // - 404: URL (asset/command) not found, check your shit and try again, loser
+// - 500: Some error occurred on the server that was not expected, too fucking bad
 // - 503: Gateway Timeout, a third party service your API is using timed out, it's not your fault
