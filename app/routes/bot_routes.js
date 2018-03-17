@@ -28,7 +28,7 @@ module.exports = function(app, db) {
         else if (check == 0) return res.status(401).send({error: 'Invalid credentials'});
         else if (check == 1) {
             var bot = req.params.bot || null,
-                pin = req.body.pin || null,
+                pin = parseInt(req.body.pin) || null,
                 state = req.body.state || null;
             if (!bot) return res.status(404).send({error: 'No bot designated'});
             if (state !== "0" && state !== "1") {
@@ -58,7 +58,7 @@ module.exports = function(app, db) {
                 writeOut(list);
                 return res.status(200).send({
                     warning: 'Database not connected',
-                    data: 'Success - ' + info.bot + ' added'
+                    data: 'Success - ' + bot + ' added'
                 });
             }
             writeOut(list);
@@ -106,7 +106,7 @@ module.exports = function(app, db) {
             return res.status(404).send({error: 'Invalid bot designation: ' + bot});
         }
         
-        rpio.mode(parseInt(list.bots[bot]["pin"]), (s == "1") ? rpio.OUTPUT: rpio.INPUT);
+        rpio.mode(list.bots[bot].pin, (s == "1") ? rpio.OUTPUT: rpio.INPUT);
         list.bots[bot]["state"] = s;
         writeOut(list);
         if (db) db.collection('bots').update({bot: bot}, {$set: {state: s}}, (err, result) => {

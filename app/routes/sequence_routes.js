@@ -21,17 +21,19 @@ module.exports = function(app, db) {
         var missing = [],
             pars = {};
         for (var par in seqs[seq]) {
-            if (!(req.body[par])) missing.push(par);
+            if (!req.body[par]) missing.push(par);
             else pars[par] = req.body[par];
         }
-        if (seqs[seq].length > 0 && missing.length > 0) return res.status(404).send({error: 'Missing parameter(s): ' + missing});
+        if (seqs[seq].length > 0 && missing.length > 0) {
+            return res.status(404).send({error: 'Missing parameter(s): ' + missing});
+        }
         // call function to initiate sequence
         try {
             var ret = runSeq[seq](pars);
             res.status(200).send({data: ret});
         }
         catch (err) {
-            res.status(200).send({error: 'Error occured while running sequence, ' + seq + ': ' + err})
+            res.status(200).send({error: 'Error occurred while running ' + seq + ' sequence: ' + err});
         }
     });
     
