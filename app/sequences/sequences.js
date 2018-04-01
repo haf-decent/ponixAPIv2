@@ -1,6 +1,9 @@
+const Relay = require('sainsmart-16-hid');
 var rpio = require('rpio');
 var list = require('../../config/lists.json');
 var writeOut = require('../other/writeOut.js');
+
+let relay = new Relay();
 
 module.exports = {
     initialize: function() {
@@ -8,50 +11,23 @@ module.exports = {
             mapping: 'physical',
             gpiomem: true
         });
+        for (var p in list.power) rpio.open(list.power[p].pin, rpio.INPUT);
+        
         for (var bot in list.bots) {
-            if (bot.indexOf("peri") > -1) list.bots[bot]["state"] = "0";
-            var mode = (list.bots[bot]["state"] == "0") ? rpio.INPUT: rpio.OUTPUT;
-            rpio.open(list.bots[bot]["pin"], mode);
+            let b = list.bots[bot];
+            if (b.state == "1") relay.set(b.relay - 1, true);
         }
-        writeOut(list);
+        
+        for (var p in list.power) rpio.mode(list.power[p].pin, rpio.OUTPUT);
+        //writeOut(list);
         return list;
     },
-    drain: function() {
-        rpio.mode(list.bots.pump_1.pin, rpio.INPUT);
-        list.bots.pump_1.state = "0";
-        rpio.mode(list.bots.pump_2.pin, rpio.INPUT);
-        list.bots.pump_2.state = "0";
-        rpio.mode(list.bots.valve_1.pin, rpio.OUTPUT);
-        list.bots.valve_1.state = "1";
-        rpio.mode(list.bots.valve_2.pin, rpio.OUTPUT);
-        list.bots.valve_2.state = "1";
+    lights: function() {
         
-        rpio.mode(list.bots.valve_3.pin, rpio.OUTPUT);
-        rpio.mode(list.bots.valve_4.pin, rpio.OUTPUT);
-        rpio.msleep(2000);
-        rpio.mode(list.bots.valve_3.pin, rpio.INPUT);
-        rpio.mode(list.bots.valve_4.pin, rpio.INPUT);
-        
-        writeOut(list);
-        return list;
-    },
-    dose: function() {
-        rpio.mode(list.bots.pump_3.pin, rpio.OUTPUT);
-        list.bots.pump_3.state = "1";
-        rpio.mode(list.bots.pump_4.pin, rpio.OUTPUT);
-        list.bots.pump_4.state = "1";
-        rpio.mode(list.bots.peri_1.pin, rpio.OUTPUT);
-        list.bots.peri_1.state = "1";
-        rpio.mode(list.bots.peri_2.pin, rpio.OUTPUT);
-        list.bots.peri_2.state = "1";
-        writeOut(list);
-        return list;
     },
     shutdown: function() {
-        for (var bot in list.bots) {
-            rpio.mode(list.bots[bot]["pin"], rpio.INPUT);
-            list.bots[bot]["state"] = "0";
-        }
+        relay.write(0b0000000000000000);
+        for (var bot in list.bots) list.bots[bot]["state"] = "0";
         writeOut(list);
         return list;
     }
