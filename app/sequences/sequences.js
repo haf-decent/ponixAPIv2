@@ -4,6 +4,7 @@ var list = require('../../config/lists.json');
 var writeOut = require('../other/writeOut.js');
 
 let relay = new Relay();
+//let relay = null;
 
 module.exports = {
     initialize: function() {

@@ -34,6 +34,7 @@ MongoClient.connect(db.url, (err, database) => {
     for (var j in jobs) {
         var job = new CronJob(jobs[j]);
         job.start();
+        if (job.running) console.log('Job: ' + j + ' successfully initiated');
     }
 });
 
