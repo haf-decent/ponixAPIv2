@@ -22,13 +22,24 @@ module.exports = {
         //writeOut(list);
         return list;
     },
-    lights: function() {
-        
+    lights: function(pars) {
+        if (!pars || !pars.state) throw new error("No state provided");
+        else if (!(pars.state == "1" || pars.state == "0")) throw new error("Invalid state: " + pars.state);
+        else {
+            var s = (pars.state == "1") ? true: false;
+            for (var bot in list.bots) {
+                relay.set(list.bots[bot].relay - 1, s);
+                list.bots[bot].state = pars.state;
+            }
+            writeOut(list);
+            return list;
+        }
     },
     shutdown: function() {
         relay.write(0b0000000000000000);
-        for (var bot in list.bots) list.bots[bot]["state"] = "0";
+        for (var bot in list.bots) list.bots[bot].state = "0";
         writeOut(list);
         return list;
-    }
+    },
+    relay: relay
 }

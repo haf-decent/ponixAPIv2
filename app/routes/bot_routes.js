@@ -2,6 +2,7 @@ var list = require('../../config/lists.json');
 var rpio = require('rpio');
 var writeOut = require('../other/writeOut.js');
 var auth = require('../other/basicAuth.js');
+var relay = require('../sequences/sequences.js').relay;
 
 module.exports = function(app, db) {
     
@@ -28,23 +29,23 @@ module.exports = function(app, db) {
         else if (check == 0) return res.status(401).send({error: 'Invalid credentials'});
         else if (check == 1) {
             var bot = req.params.bot || null,
-                pin = parseInt(req.body.pin) || null,
+                relay = parseInt(req.body.relay) || null,
                 state = req.body.state || null;
             if (!bot) return res.status(404).send({error: 'No bot designated'});
             if (state !== "0" && state !== "1") {
                 return res.status(404).send({error: 'Invalid state: ' + state});
             }
-            if (pin > 40 || pin < 3) {
-                return res.status(404).send({error: 'Invalid pin: ' + pin});
+            if (relay > 16 || relay < 1) {
+                return res.status(404).send({error: 'Invalid relay: ' + relay});
             }
             for (var b in list.bots) {
-                if (pin == list.bots[b].pin && bot !== b) {
-                    return res.status(404).send({error: 'Pin ' + pin + ' is already assigned'});
+                if (relay == list.bots[b].relay && bot !== b) {
+                    return res.status(404).send({error: 'Relay ' + relay + ' is already assigned'});
                 }
             }
             //add bot to database
             list.bots[bot] = {
-                pin: pin,
+                relay: relay,
                 state: state
             };
             if (db) db.collection('bots').insert({
@@ -106,7 +107,7 @@ module.exports = function(app, db) {
             return res.status(404).send({error: 'Invalid bot designation: ' + bot});
         }
         
-        rpio.mode(list.bots[bot].pin, (s == "1") ? rpio.OUTPUT: rpio.INPUT);
+        relay.set(list.bots[bot].relay - 1, s == '1');
         list.bots[bot]["state"] = s;
         writeOut(list);
         if (db) db.collection('bots').update({bot: bot}, {$set: {state: s}}, (err, result) => {

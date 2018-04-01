@@ -2,6 +2,8 @@ const express = require('express'); //web framework
 const MongoClient = require('mongodb').MongoClient; //database
 const bodyParser = require('body-parser'); //handling encoding
 const db = require('./config/db'); //database configuration
+const CronJob = require('cron').CronJob;
+var jobs = require('./config/jobs');
 
 const app = express();
 
@@ -28,6 +30,11 @@ MongoClient.connect(db.url, (err, database) => {
     app.listen(port, () => {
       console.log('We are live on ' + port);
     });
+    
+    for (var j in jobs) {
+        var job = new CronJob(jobs[j]);
+        job.start();
+    }
 });
 
 
