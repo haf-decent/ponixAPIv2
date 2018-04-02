@@ -36,6 +36,8 @@ MongoClient.connect(db.url, (err, database) => {
         job.start();
         if (job.running) console.log('Job: ' + j + ' successfully initiated');
     }
+    
+    require('./app/sequences/sequences.js').initialize();
 });
 
 
