@@ -1,2 +1,3 @@
 # ponixAPIv2
-Don't forget to add config folder with db.js (database login info) and lists.json (local state database)
+Deprecated version of PonixOS, an indoor farming automation application.
+Current version is in private Beta. Contact me for a demo.
